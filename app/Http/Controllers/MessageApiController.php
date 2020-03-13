@@ -75,7 +75,7 @@ class MessageApiController extends Controller
             return response()->json([
                 'status_code'=>500,
                 'data'=>null,
-                'error'=>'error Encounted'
+                'error'=>$exception,
             ],500);
         }
 
