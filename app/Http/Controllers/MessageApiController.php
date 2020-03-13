@@ -21,7 +21,8 @@ class MessageApiController extends Controller
 //        $audio_files =[];
 //        $picture_files =[];
         try{
-            $messages = Message::all();
+//            $messages = Message::all();
+            $messages = 'test route';
             echo $messages;
             exit();
             return response()->json([
