@@ -22,6 +22,8 @@ class MessageApiController extends Controller
 //        $picture_files =[];
         try{
             $messages = Message::all();
+            echo $messages;
+            exit();
             return response()->json([
                 'status_code'=>200,
                 'data'=>$messages,
