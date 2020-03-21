@@ -64,8 +64,12 @@ class MessageApiController extends Controller
             $photo = $request->message_picture;
             $photo_name = $request->title . '_' . date('d:m:h') .'.jpg';
             $photo_name = str_replace(' ','_',$photo_name);
-            $details['message_file']= $audio->storeAs('audios',$audio_name);
-            $details['message_picture']= $photo->storeAs('photos',$photo_name);
+            $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
+            $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
+            $details['message_file']=$mp3;
+//                $audio->storeAs('audios',$audio_name);
+            $details['message_picture']=$pic;
+//                $photo->storeAs('photos',$photo_name);
             $message->update($details);
             return  response()->json([
                 'status_code'=>201,
@@ -101,8 +105,8 @@ class MessageApiController extends Controller
 //        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
         try {
                 $message = Message::findOrFail($id);
-//                $file = Storage::get($message->message_file);
-                $file = storage_path('app/'.$message->message_file);
+                $file = Storage::get($message->message_file);
+//                $file = storage_path('app/'.$message->message_file);
 //                echo $file;
 //                exit();
                 $play = new BinaryFileResponse($file);
@@ -156,8 +160,8 @@ class MessageApiController extends Controller
 
         try {
             $message = Message::findOrFail($id);
-//            $file = Storage::get($message->message_file);
-            $path = storage_path('app/'.$message->message_file);
+            $path = Storage::get($message->message_file);
+//            $path = storage_path('app/'.$message->message_file);
 //            echo $path;
 //            exit();
             $size = filesize($path);
