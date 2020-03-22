@@ -175,14 +175,14 @@ class MessageApiController extends Controller
             $message = Message::findOrFail($id);
 //            echo $message;
             $path = Storage::disk('s3')->url($message->message_file);
-        return \Response::make(Storage::disk('s3')->get($path), 200, $headers);
+
 //            $path = storage_path('app/'.$message->message_file);
 //            echo $path;
 //            exit();
 //            $size = filesize($path);
 //            $start = 0;
 //            $end = $size-1;
-        s3://radio-app-api/audios/AWS_test_22:03:05.mp3
+
             $headers=[
                 'Accept-Ranges' => "bytes",
                 'Accept-Encoding' => "gzip, deflate",
@@ -198,7 +198,7 @@ class MessageApiController extends Controller
                 'X-Pad' => 'avoid browser bug',
                 'Etag' => $message->message_file,
             ];
-            return response()->file($path,$headers);
+            return readfile($path);
 //            download($path,$headers);
 //
 
