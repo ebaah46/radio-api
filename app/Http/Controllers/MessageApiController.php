@@ -115,12 +115,12 @@ class MessageApiController extends Controller
 //        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
 //        try {
                 $message = Message::findOrFail($id);
-                $file = Storage::disk('s3')->url($message->message_file);
+                $file = Storage::disk('s3')->get($message->message_file);
 //                $file = storage_path('app/'.$message->message_file);
 
 //        https://radio-app-api.s3.us-east-2.amazonaws.com/audios/AWS_test_22%3A03%3A05.mp3
-//                echo $file;
-//                exit();
+                echo $file;
+                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
                 return $play;
@@ -173,10 +173,10 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
 //            echo $message;
-            $path = Storage::disk('s3')->url($message->message_file);
+            $path = Storage::disk('s3')->get($message->message_file);
 //            $path = storage_path('app/'.$message->message_file);
-//            echo $path;
-//            exit();
+            echo $path;
+            exit();
             $size = filesize($path);
             $start = 0;
             $end = $size-1;
