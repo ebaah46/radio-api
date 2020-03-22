@@ -179,7 +179,9 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
             $file = file_get_contents($message->message_file);
-            $local = Storage::put('messages',$file);
+            $local = $file->storeAs('messages',$message->title);
+            echo $local;
+            exit();
             $path = Storage::url($local);
 //            exit();
 //            $path = storage_path('app/'.$message->message_file);
