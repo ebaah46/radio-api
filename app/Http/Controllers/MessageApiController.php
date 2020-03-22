@@ -180,8 +180,8 @@ class MessageApiController extends Controller
             $message = Message::findOrFail($id);
             $file = file_get_contents($message->message_file);
 //            $local = Storage::putFile('messages',$file);
-//            echo $local;
-//            exit();
+////            echo $local;
+////            exit();
 //            $path = Storage::url($local);
 //            exit();
 //            $path = storage_path('app/'.$message->message_file);
@@ -209,14 +209,28 @@ class MessageApiController extends Controller
             ];
 //        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
 
-        $filename = 'temp-image.mp3';
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($message->message_file, $tempImage);
 
-        return response()->download($tempImage, $filename);
+        // Load the file contents into a variable.
+        $contents = file_get_contents($message->message_file);
+
+// Save the variable as `google.html` file onto
+// your local drive, most probably at `your_laravel_project/storage/app/`
+// path (as per default Laravel storage config)
+        Storage::disk('local')->put('google.mp3', $contents);
+
+// -- Here your downloaded the file from URL
+// -- to your local Laravel storage (server).
+
+// -- Now, if desired, and if you are doing this within a web application's
+// -- HTTP request (as opposite to CLI application)
+// -- the file can be sent to the browser (client) with the response
+// -- to be downloaded at a browser side
+
+// Get the file path within you local filesystem
+        $path = Storage::url('google.html');
 
 // Return HTTP response to a client that initiates the file downolad
-        return response()->download($path, $name, $headers);
+        return response()->download($path, $message->title, $headers);
 
 
 
