@@ -181,6 +181,8 @@ class MessageApiController extends Controller
 //            echo $message;
             $path = Storage::disk('s3')->get($message->message_file);
             $path = Storage::disk('s3')->readStream($message->message_file);
+            $path = Storage::disk('s3')->get($message->message_file);
+
             $exists = Storage::disk( 's3')->exists($message->message_file);
 //            echo $exists;
 //            exit();
@@ -196,19 +198,19 @@ class MessageApiController extends Controller
                 'Accept-Encoding' => "gzip, deflate",
                 'Pragma' => 'public',
                 'Expires' => '0',
-                'Cache-Control' => 'public',
+                'Cache-Control' => 'must-revalidate\'',
                 'Content-Transfer-Encoding' => 'binary',
                 'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
 //                'Content-Length' => $size,
-                'Content-Type' => "audio/mpeg",
+                'Content-Type' => "audio/mpeg, audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3",
                 'Connection' => "Keep-Alive",
 //                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
                 'X-Pad' => 'avoid browser bug',
                 'Etag' => $message->message_file,
                 'Content-Description' => 'File Transfer',
             ];
-        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
-//            return Storage::disk('s3')->response($message->message_file);
+//        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
+            return response()->download($path,$message->title,$headers);
 //            file($path);
 //
 //
