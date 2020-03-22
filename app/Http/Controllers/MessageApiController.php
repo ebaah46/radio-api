@@ -208,6 +208,35 @@ class MessageApiController extends Controller
                 'Content-Description' => 'File Transfer',
             ];
 //        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
+
+
+        // Load the file contents into a variable.
+        $contents = file_get_contents('www.google.com');
+
+// Save the variable as `google.html` file onto
+// your local drive, most probably at `your_laravel_project/storage/app/`
+// path (as per default Laravel storage config)
+        Storage::disk('local')->put('google.html', $contents);
+
+// -- Here your downloaded the file from URL
+// -- to your local Laravel storage (server).
+
+// -- Now, if desired, and if you are doing this within a web application's
+// -- HTTP request (as opposite to CLI application)
+// -- the file can be sent to the browser (client) with the response
+// -- to be downloaded at a browser side
+
+// Get the file path within you local filesystem
+        $path = Storage::url('google.html');
+
+// Return HTTP response to a client that initiates the file downolad
+        return response()->download($path, $name, $headers);
+
+
+
+
+
+
             return response()->download($path,$message->title,$headers);
 //            file($path);
 //
