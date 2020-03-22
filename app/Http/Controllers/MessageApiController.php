@@ -74,12 +74,14 @@ class MessageApiController extends Controller
             $photo = $request->message_picture;
             $photo_name = $request->title . '_' . date('d:m:h') .'.jpg';
             $photo_name = str_replace(' ','_',$photo_name);
-            $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name,['public']);
+            $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
+            Storage::disk('s3')->setVisibility($mp3,'public');
 
             $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
-            $details['message_file']=$mp3;
+            Storage::disk('s3')->setVisibility($pic,'public');
+            $details['message_file']=Storage::disk('s3')->url($mp3);
 //                $audio->storeAs('audios',$audio_name);
-            $details['message_picture']=$pic;
+            $details['message_picture']=Storage::disk('s3')->url($pic);
 //                $photo->storeAs('photos',$photo_name);
             $message->update($details);
             return  response()->json([
@@ -124,7 +126,9 @@ class MessageApiController extends Controller
 //                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
-                return $play;
+
+        return Storage::disk('s3')->response($message->message_file);
+//                return $play;
 //        }catch (\Exception $exception){
 //            return response()->json([
 //                'status_code'=>206,
@@ -202,7 +206,7 @@ class MessageApiController extends Controller
                 'Etag' => $message->message_file,
                 'Content-Description' => 'File Transfer',
             ];
-            return response()->file($path,$headers);
+            return Storage::disk('s3')->response($message->message_file);
 //            file($path);
 //
 //
