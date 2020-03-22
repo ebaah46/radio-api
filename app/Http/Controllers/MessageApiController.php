@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Matrix\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 //use Aws\AwsClient;
+use Illuminate\Support\Facades\Response as Download;
 
 //require('vendor/autoload.php');
 //require()
@@ -206,7 +207,8 @@ class MessageApiController extends Controller
                 'Etag' => $message->message_file,
                 'Content-Description' => 'File Transfer',
             ];
-            return Storage::disk('s3')->response($message->message_file);
+        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
+//            return Storage::disk('s3')->response($message->message_file);
 //            file($path);
 //
 //
