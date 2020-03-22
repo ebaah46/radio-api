@@ -176,41 +176,24 @@ class MessageApiController extends Controller
     {
         // Download a particular message unto device
 
-//        try {
+        try {
             $message = Message::findOrFail($id);
-//            $file = file_get_contents($message->message_file);
-//
-//            $headers=[
-//                'Accept-Ranges' => "bytes",
-//                'Accept-Encoding' => "gzip, deflate",
-//                'Pragma' => 'public',
-//                'Expires' => '0',
-//                'Cache-Control' => 'must-revalidate\'',
-//                'Content-Transfer-Encoding' => 'binary',
-//                'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
-////                'Content-Length' => $size,
-//                'Content-Type' => "audio/mpeg, audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3",
-//                'Connection' => "Keep-Alive",
-////                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
-//                'X-Pad' => 'avoid browser bug',
-//                'Etag' => $message->message_file,
-//                'Content-Description' => 'File Transfer',
-//            ];
-
-        $filename = $message->title.'.mp3';
-        $tempMessage = tempnam(sys_get_temp_dir(), $filename);
-        copy($message->message_file, $tempMessage);
-
-        return response()->download($tempMessage, $filename)->deleteFileAfterSend(true);
 
 
-//        }catch (\Exception $exception){
-//            return response()->json([
-//                'status_code'=>500,
-//                'data'=>null,
-//                'error'=>$exception
-//            ],500);
-//        }
+             $filename = $message->title.'.mp3';
+             $tempMessage = tempnam(sys_get_temp_dir(), $filename);
+             copy($message->message_file, $tempMessage);
+
+            return response()->download($tempMessage, $filename)->deleteFileAfterSend(true);
+
+
+        }catch (\Exception $exception){
+            return response()->json([
+                'status_code'=>500,
+                'data'=>null,
+                'error'=>$exception
+            ],500);
+        }
     }
 //    Function to check PHP info
     public function checkInfo(){
