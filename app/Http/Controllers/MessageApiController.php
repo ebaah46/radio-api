@@ -174,10 +174,10 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
 //            echo $message;
-            $path = Storage::disk('s3')->url($message->message_file);
+            $path = Storage::disk('s3')->temporaryUrl($message->message_file,now()->addMinutes(10));
             $exists = Storage::disk( 's3')->exists($message->message_file);
-            echo $exists;
-            exit();
+//            echo $exists;
+//            exit();
 //            $path = storage_path('app/'.$message->message_file);
 //            echo $path;
 //            exit();
@@ -190,7 +190,7 @@ class MessageApiController extends Controller
                 'Accept-Encoding' => "gzip, deflate",
                 'Pragma' => 'public',
                 'Expires' => '0',
-                'Cache-Control' => 'must-revalidate',
+                'Cache-Control' => 'public',
                 'Content-Transfer-Encoding' => 'binary',
                 'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
 //                'Content-Length' => $size,
