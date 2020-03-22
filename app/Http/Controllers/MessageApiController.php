@@ -178,42 +178,30 @@ class MessageApiController extends Controller
 
 //        try {
             $message = Message::findOrFail($id);
-            $file = file_get_contents($message->message_file);
-//            $local = $file->storeAs('messages',$message->title);
-//            echo $local;
-//            exit();
-//            $path = Storage::url($local);
+//            $file = file_get_contents($message->message_file);
+//
+//            $headers=[
+//                'Accept-Ranges' => "bytes",
+//                'Accept-Encoding' => "gzip, deflate",
+//                'Pragma' => 'public',
+//                'Expires' => '0',
+//                'Cache-Control' => 'must-revalidate\'',
+//                'Content-Transfer-Encoding' => 'binary',
+//                'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
+////                'Content-Length' => $size,
+//                'Content-Type' => "audio/mpeg, audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3",
+//                'Connection' => "Keep-Alive",
+////                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
+//                'X-Pad' => 'avoid browser bug',
+//                'Etag' => $message->message_file,
+//                'Content-Description' => 'File Transfer',
+//            ];
 
-            $headers=[
-                'Accept-Ranges' => "bytes",
-                'Accept-Encoding' => "gzip, deflate",
-                'Pragma' => 'public',
-                'Expires' => '0',
-                'Cache-Control' => 'must-revalidate\'',
-                'Content-Transfer-Encoding' => 'binary',
-                'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
-//                'Content-Length' => $size,
-                'Content-Type' => "audio/mpeg, audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3",
-                'Connection' => "Keep-Alive",
-//                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
-                'X-Pad' => 'avoid browser bug',
-                'Etag' => $message->message_file,
-                'Content-Description' => 'File Transfer',
-            ];
-//        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
         $filename = $message->title.'.mp3';
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($message->message_file, $tempImage);
+        $tempMessage = tempnam(sys_get_temp_dir(), $filename);
+        copy($message->message_file, $tempMessage);
 
-        return response()->download($tempImage, $filename);
-
-
-
-            return response()->download($path,$message->title,$headers);
-//            file($path);
-//
-//
-
+        return response()->download($tempMessage, $filename)->deleteFileAfterSend(true);
 
 
 //        }catch (\Exception $exception){
