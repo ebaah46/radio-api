@@ -173,13 +173,13 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
 //            echo $message;
-            $path = Storage::disk('s3')->get($message->message_file);
+            $path = Storage::disk('s3')->url($message->message_file);
 //            $path = storage_path('app/'.$message->message_file);
-            echo $path;
-            exit();
-            $size = filesize($path);
-            $start = 0;
-            $end = $size-1;
+//            echo $path;
+//            exit();
+//            $size = filesize($path);
+//            $start = 0;
+//            $end = $size-1;
             $headers=[
                 'Accept-Ranges' => "bytes",
                 'Accept-Encoding' => "gzip, deflate",
@@ -188,14 +188,15 @@ class MessageApiController extends Controller
                 'Cache-Control' => 'must-revalidate',
                 'Content-Transfer-Encoding' => 'binary',
                 'Content-Disposition' => ' attachment; filename='.$message->title.'.mp3',
-                'Content-Length' => $size,
+//                'Content-Length' => $size,
                 'Content-Type' => "audio/mpeg",
                 'Connection' => "Keep-Alive",
-                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
+//                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
                 'X-Pad' => 'avoid browser bug',
                 'Etag' => $message->message_file,
             ];
-            return response()->file($path,$headers);
+            return response()->download($path,$headers);
+//            file($path,$headers);
 
 //        }catch (\Exception $exception){
 //            return response()->json([
