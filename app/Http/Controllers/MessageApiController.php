@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Matrix\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+//use Aws\AwsClient;
+
+require('vendor/autoload.php');
+
 
 class MessageApiController extends Controller
 {
@@ -15,6 +19,8 @@ class MessageApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+$s3 =  new AwsClient (['version'  => '2006-03-01', 'region'   => 'us-east-1',]);
     public function index()
     {
         // Retrieve all  messages in the DB
