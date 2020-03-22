@@ -117,8 +117,8 @@ class MessageApiController extends Controller
                 $message = Message::findOrFail($id);
                 $file = Storage::disk('s3')->get($message->message_file);
 //                $file = storage_path('app/'.$message->message_file);
-                echo $file;
-                exit();
+//                echo $file;
+//                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
                 return $play;
@@ -173,8 +173,8 @@ class MessageApiController extends Controller
 //            echo $message;
             $path = Storage::disk('s3')->get($message->message_file);
 //            $path = storage_path('app/'.$message->message_file);
-            echo $path;
-            exit();
+//            echo $path;
+//            exit();
             $size = filesize($path);
             $start = 0;
             $end = $size-1;
