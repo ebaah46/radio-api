@@ -201,8 +201,9 @@ class MessageApiController extends Controller
                 'Etag' => $message->message_file,
                 'Content-Description' => 'File Transfer',
             ];
-            return response()->file($path);
-//            download($path,$headers);
+            return response()->download($path,$headers);
+//            file($path);
+//
 //
 
 //        }catch (\Exception $exception){
