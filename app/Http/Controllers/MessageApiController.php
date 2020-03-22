@@ -9,7 +9,7 @@ use Matrix\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 //use Aws\AwsClient;
 
-require('vendor/autoload.php');
+//require('vendor/autoload.php');
 
 
 class MessageApiController extends Controller
