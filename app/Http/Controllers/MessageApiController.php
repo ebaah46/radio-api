@@ -227,7 +227,7 @@ class MessageApiController extends Controller
 // -- to be downloaded at a browser side
 
 // Get the file path within you local filesystem
-        $path = Storage::url('google.html');
+        $path = Storage::url('google.mp3');
 
 // Return HTTP response to a client that initiates the file downolad
         return response()->download($path, $message->title, $headers);
