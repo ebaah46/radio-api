@@ -179,17 +179,10 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
             $file = file_get_contents($message->message_file);
-//            $local = Storage::putFile('messages',$file);
-////            echo $local;
-////            exit();
+//            $local = $file->storeAs('messages',$message->title);
+//            echo $local;
+//            exit();
 //            $path = Storage::url($local);
-//            exit();
-//            $path = storage_path('app/'.$message->message_file);
-//            echo $path;
-//            exit();
-//            $size = filesize($path);
-//            $start = 0;
-//            $end = $size-1;
 
             $headers=[
                 'Accept-Ranges' => "bytes",
@@ -208,34 +201,11 @@ class MessageApiController extends Controller
                 'Content-Description' => 'File Transfer',
             ];
 //        return Download::make(Storage::disk('s3')->get($message->message_file), Response::HTTP_OK, $headers);
+        $filename = $message->title.'.mp3';
+        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        copy($message->message_file, $tempImage);
 
-
-        // Load the file contents into a variable.
-        $contents = file_get_contents($message->message_file);
-
-// Save the variable as `google.html` file onto
-// your local drive, most probably at `your_laravel_project/storage/app/`
-// path (as per default Laravel storage config)
-       $google = Storage::disk('local')->put('google', $contents);
-
-// -- Here your downloaded the file from URL
-// -- to your local Laravel storage (server).
-
-// -- Now, if desired, and if you are doing this within a web application's
-// -- HTTP request (as opposite to CLI application)
-// -- the file can be sent to the browser (client) with the response
-// -- to be downloaded at a browser side
-
-// Get the file path within you local filesystem
-//        $exists = Storage::disk('s3')->exists('file.jpg');
-        $path = storage_path($google);
-//        echo $path;
-//        exit();
-// Return HTTP response to a client that initiates the file downolad
-        return response()->download($path, $message->title, $headers);
-
-
-
+        return response()->download($tempImage, $filename);
 
 
 
@@ -243,6 +213,8 @@ class MessageApiController extends Controller
 //            file($path);
 //
 //
+
+
 
 //        }catch (\Exception $exception){
 //            return response()->json([
