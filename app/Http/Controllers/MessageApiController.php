@@ -61,8 +61,8 @@ class MessageApiController extends Controller
     public function store(Request $request)
     {
         //Store message files in db
-//        try{
-//        dd(config('filesystems.disks.s3.region'));
+        try{
+
             $details = $request->except('message_file','message_picture');
             $message = Message::query()->create($details);
             $audio = $request->message_file;
@@ -74,8 +74,7 @@ class MessageApiController extends Controller
             $photo_name = $request->title . '_' . date('d:m:h') .'.jpg';
             $photo_name = str_replace(' ','_',$photo_name);
             $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
-            echo $mp3;
-            exit();
+
             $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
             $details['message_file']=$mp3;
 //                $audio->storeAs('audios',$audio_name);
@@ -86,13 +85,13 @@ class MessageApiController extends Controller
                 'status_code'=>201,
                 'data'=>'message successfully created'
             ],201);
-//        }catch (\Exception $exception){
-//            return response()->json([
-//                'status_code'=>500,
-//                'data'=>null,
-//                'error'=>$exception,
-//            ],500);
-//        }
+        }catch (\Exception $exception){
+            return response()->json([
+                'status_code'=>500,
+                'data'=>null,
+                'error'=>$exception,
+            ],500);
+        }
 
     }
 
@@ -116,7 +115,7 @@ class MessageApiController extends Controller
 //        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
         try {
                 $message = Message::findOrFail($id);
-                $file = Storage::get($message->message_file);
+                $file = Storage::disk('s3')->get($message->message_file);
 //                $file = storage_path('app/'.$message->message_file);
 //                echo $file;
 //                exit();
@@ -171,7 +170,7 @@ class MessageApiController extends Controller
 
         try {
             $message = Message::findOrFail($id);
-            $path = Storage::get($message->message_file);
+            $path = Storage::disk('s3')->get($message->message_file);
 //            $path = storage_path('app/'.$message->message_file);
 //            echo $path;
 //            exit();
