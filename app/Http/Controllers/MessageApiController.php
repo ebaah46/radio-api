@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 //use Aws\AwsClient;
 
 //require('vendor/autoload.php');
+//require()
 
 
 class MessageApiController extends Controller
@@ -73,7 +74,7 @@ class MessageApiController extends Controller
             $photo = $request->message_picture;
             $photo_name = $request->title . '_' . date('d:m:h') .'.jpg';
             $photo_name = str_replace(' ','_',$photo_name);
-            $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
+            $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name,['public']);
 
             $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
             $details['message_file']=$mp3;
@@ -115,12 +116,12 @@ class MessageApiController extends Controller
 //        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
 //        try {
                 $message = Message::findOrFail($id);
-                $file = Storage::disk('s3')->get($message->message_file);
+                $file = Storage::disk('s3')->url($message->message_file);
 //                $file = storage_path('app/'.$message->message_file);
 
 //        https://radio-app-api.s3.us-east-2.amazonaws.com/audios/AWS_test_22%3A03%3A05.mp3
-                echo $file;
-                exit();
+//                echo $file;
+//                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
                 return $play;
@@ -180,6 +181,7 @@ class MessageApiController extends Controller
 //            $size = filesize($path);
 //            $start = 0;
 //            $end = $size-1;
+        s3://radio-app-api/audios/AWS_test_22:03:05.mp3
             $headers=[
                 'Accept-Ranges' => "bytes",
                 'Accept-Encoding' => "gzip, deflate",
@@ -195,8 +197,9 @@ class MessageApiController extends Controller
                 'X-Pad' => 'avoid browser bug',
                 'Etag' => $message->message_file,
             ];
-            return response()->download($path,$headers);
-//            file($path,$headers);
+            return response()->file($path,$headers);
+//            download($path,$headers);
+//
 
 //        }catch (\Exception $exception){
 //            return response()->json([
