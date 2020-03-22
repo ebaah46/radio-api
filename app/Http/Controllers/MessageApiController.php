@@ -216,7 +216,7 @@ class MessageApiController extends Controller
 // Save the variable as `google.html` file onto
 // your local drive, most probably at `your_laravel_project/storage/app/`
 // path (as per default Laravel storage config)
-       $google = Storage::disk('local')->putFile('google', $contents);
+       $google = Storage::disk('local')->put('google', $contents);
 
 // -- Here your downloaded the file from URL
 // -- to your local Laravel storage (server).
@@ -229,8 +229,8 @@ class MessageApiController extends Controller
 // Get the file path within you local filesystem
 //        $exists = Storage::disk('s3')->exists('file.jpg');
         $path = storage_path($google);
-        echo $path;
-        exit();
+//        echo $path;
+//        exit();
 // Return HTTP response to a client that initiates the file downolad
         return response()->download($path, $message->title, $headers);
 
