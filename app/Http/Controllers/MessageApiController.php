@@ -174,7 +174,7 @@ class MessageApiController extends Controller
 //        try {
             $message = Message::findOrFail($id);
 //            echo $message;
-            $path = Storage::disk('s3')->temporaryUrl($message->message_file,now()->addMinutes(10));
+            $path = Storage::disk('s3')->get($message->message_file);
             $exists = Storage::disk( 's3')->exists($message->message_file);
 //            echo $exists;
 //            exit();
