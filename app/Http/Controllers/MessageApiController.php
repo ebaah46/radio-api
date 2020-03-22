@@ -175,7 +175,9 @@ class MessageApiController extends Controller
             $message = Message::findOrFail($id);
 //            echo $message;
             $path = Storage::disk('s3')->url($message->message_file);
-
+            $exists = Storage::disk( 's3')->assertExists($message->message_file);
+            echo $exists;
+            exit();
 //            $path = storage_path('app/'.$message->message_file);
 //            echo $path;
 //            exit();
@@ -197,6 +199,7 @@ class MessageApiController extends Controller
 //                'Content-Range' => 'bytes 0-'.$end .'/'.$size,
                 'X-Pad' => 'avoid browser bug',
                 'Etag' => $message->message_file,
+                'Content-Description' => 'File Transfer',
             ];
             return readfile($path);
 //            download($path,$headers);
