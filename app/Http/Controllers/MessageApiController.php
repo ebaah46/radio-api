@@ -113,7 +113,7 @@ class MessageApiController extends Controller
         $headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
         $headers['Connection'] = 'Keep-Alive';
 //        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
-        try {
+//        try {
                 $message = Message::findOrFail($id);
                 $file = Storage::disk('s3')->get($message->message_file);
 //                $file = storage_path('app/'.$message->message_file);
@@ -122,13 +122,13 @@ class MessageApiController extends Controller
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
                 return $play;
-        }catch (\Exception $exception){
-            return response()->json([
-                'status_code'=>206,
-                'data'=>null,
-                'error'=>$exception
-            ],206);
-        }
+//        }catch (\Exception $exception){
+//            return response()->json([
+//                'status_code'=>206,
+//                'data'=>null,
+//                'error'=>$exception
+//            ],206);
+//        }
     }
 
     /**
