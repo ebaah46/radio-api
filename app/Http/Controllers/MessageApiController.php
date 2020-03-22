@@ -119,8 +119,8 @@ class MessageApiController extends Controller
 //                $file = storage_path('app/'.$message->message_file);
 
 //        https://radio-app-api.s3.us-east-2.amazonaws.com/audios/AWS_test_22%3A03%3A05.mp3
-//                echo $file;
-//                exit();
+                echo $file;
+                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
                 return $play;
