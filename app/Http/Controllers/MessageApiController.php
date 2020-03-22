@@ -20,7 +20,7 @@ class MessageApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-$s3 =  new AwsClient (['version'  => '2006-03-01', 'region'   => 'us-east-1',]);
+//$s3 =  new AwsClient (['version'  => '2006-03-01', 'region'   => 'us-east-1',]);
     public function index()
     {
         // Retrieve all  messages in the DB
