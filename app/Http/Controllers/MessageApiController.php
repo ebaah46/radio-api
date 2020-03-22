@@ -61,16 +61,21 @@ class MessageApiController extends Controller
     public function store(Request $request)
     {
         //Store message files in db
-        try{
+//        try{
+//        dd(config('filesystems.disks.s3.region'));
             $details = $request->except('message_file','message_picture');
             $message = Message::query()->create($details);
             $audio = $request->message_file;
+
             $audio_name = $request->title . '_' . date('d:m:h') .'.mp3';
             $audio_name = str_replace(' ','_',$audio_name);
+
             $photo = $request->message_picture;
             $photo_name = $request->title . '_' . date('d:m:h') .'.jpg';
             $photo_name = str_replace(' ','_',$photo_name);
             $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
+            echo $mp3;
+            exit();
             $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
             $details['message_file']=$mp3;
 //                $audio->storeAs('audios',$audio_name);
@@ -81,13 +86,13 @@ class MessageApiController extends Controller
                 'status_code'=>201,
                 'data'=>'message successfully created'
             ],201);
-        }catch (\Exception $exception){
-            return response()->json([
-                'status_code'=>500,
-                'data'=>null,
-                'error'=>$exception,
-            ],500);
-        }
+//        }catch (\Exception $exception){
+//            return response()->json([
+//                'status_code'=>500,
+//                'data'=>null,
+//                'error'=>$exception,
+//            ],500);
+//        }
 
     }
 
