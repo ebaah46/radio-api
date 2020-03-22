@@ -216,7 +216,7 @@ class MessageApiController extends Controller
 // Save the variable as `google.html` file onto
 // your local drive, most probably at `your_laravel_project/storage/app/`
 // path (as per default Laravel storage config)
-       $google = Storage::disk('local')->putFileAs('google', $contents,$message->title);
+       $google = Storage::disk('local')->putFile('google', $contents);
 
 // -- Here your downloaded the file from URL
 // -- to your local Laravel storage (server).
