@@ -77,13 +77,10 @@ class MessageApiController extends Controller
             $photo_name = str_replace(' ','_',$photo_name);
             $mp3= Storage::disk('s3')->putFileAs('audios',$audio,$audio_name);
             Storage::disk('s3')->setVisibility($mp3,'public');
-
             $pic = Storage::disk('s3')->putFileAs('photos',$photo,$photo_name);
             Storage::disk('s3')->setVisibility($pic,'public');
             $details['message_file']=Storage::disk('s3')->url($mp3);
-//                $audio->storeAs('audios',$audio_name);
             $details['message_picture']=Storage::disk('s3')->url($pic);
-//                $photo->storeAs('photos',$photo_name);
             $message->update($details);
             return  response()->json([
                 'status_code'=>201,
@@ -116,27 +113,20 @@ class MessageApiController extends Controller
         $headers['Accept-Range'] = 'bytes';
         $headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
         $headers['Connection'] = 'Keep-Alive';
-//        $headers['Content-Disposition'] = 'attachment; filename="'.$song->path.'.mp3"';
-//        try {
+
+        try {
                 $message = Message::findOrFail($id);
                 $file = Storage::disk('s3')->url($message->message_file);
-//                $file = storage_path('app/'.$message->message_file);
-
-//        https://radio-app-api.s3.us-east-2.amazonaws.com/audios/AWS_test_22%3A03%3A05.mp3
-//                echo $file;
-//                exit();
                 $play = new BinaryFileResponse($file);
                 BinaryFileResponse::trustXSendfileTypeHeader();
-
-        return Storage::disk('s3')->response($message->message_file);
-//                return $play;
-//        }catch (\Exception $exception){
-//            return response()->json([
-//                'status_code'=>206,
-//                'data'=>null,
-//                'error'=>$exception
-//            ],206);
-//        }
+                return $play;
+        }catch (\Exception $exception){
+            return response()->json([
+                'status_code'=>206,
+                'data'=>null,
+                'error'=>$exception
+            ],206);
+        }
     }
 
     /**
